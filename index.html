@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="Access-Control-Allow-Origin" content="*">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+        <meta name="application-name" content="Olt_chat">
+        <link rel="stylesheet" type="text/css" href="css/window.css">
+    </head>
+    <body>
+        <div id = "window_panel" class = "window_panel">
+            <div id="headder_panel"class="headder_panel">
+                <a href="#" id="btn_clean">
+                    <div id = "btn_cln">
+                         <img src="pic/clean_btn.png" style="width:100%; height:100%;">
+                    </div>
+                </a>
+            </div>
+            <div id="timeline_panel" >
+                <div id="obj" class ="obj">
+                </div>
+            </div>
+            <div id="input_panel" class = "input_panel" >
+                <textarea id = "textInput_area" class ="textInput_area"></textarea>
+               <a href="#" id="btn_sample">
+                    <div id = "btn_pic">
+                         <img src="pic/button_post.png" style="width:100%; height:100%;">
+                    </div>
+                </a>
+            </div>
+        </div>
+    </body>
+    <script type="application/javascript" src="js/socket.js"></script>
+    <script>
+        var s = io.connect('http://localhost:3000');//ローカル
+        //サーバから受け取るイベント
+        s.on("connect", function () {});//接続時
+        s.on("disconnect", function (client) {});//切断時
+        s.on("S_to_C_message", function (data) {
+            addMessage(data.value);
+        });
+        //クライアントからイベント送信時のイベントハンドラ
+        function sendBroadcast(text) {
+            let msg = text //取得
+            s.emit("C_to_S_broadcast", {value:msg}); // サーバへ送信
+            let request = new MakeObjectClass('send', msg);
+            request.send(msg);
+            console.log(msg);
+        }
+        function addMessage (value,color,size) {
+            let msg = value.replace( /[!@$%<>'"&|]/g, ''); //タグ記号とかいくつか削除
+            if(msg !== "user disconnected"){
+                let request = new MakeObjectClass('get', msg);
+                request.get(msg);
+            }
+        }
+    </script>
+    <script type="application/javascript" src="js/window.js"></script>
+</html>
