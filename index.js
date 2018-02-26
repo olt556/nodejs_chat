@@ -1,16 +1,19 @@
 const request = require('request'),
       crypto = require('crypto');
 const http = require('http');
-const fs   = require('fs');
-const url = require('url');
-const path = require('path');
+      fs   = require('fs');
+      url = require('url');
+      path = require('path');
 const qs = require('querystring')
 const mime = {
   ".html": "text/html",
   ".css":  "text/css",
-  ".js":  "text/javascript",
+  ".js":   "text/javascript",
+  ".png":  "image/png",
+  ".jpg":  "image/jpeg",
   // 読み取りたいMIMEタイプはここに追記
 };
+
 const requestUrl = 'https://api.twitter.com/oauth/request_token';
 const callbackUrl = 'http://localhost:3000/';
 const consumer_key = "JKAxjdMHXNuMsdsexdLa8DBb2";
@@ -34,12 +37,13 @@ let data_params = {
 
 let tmp_body = {};
 
+
 const http_server = new http.createServer(function(req, res) {
-  //request.post(options, function(error, response, body){});
-  if (res.url == '/') {
+
+  if (req.url == '/') {
     filePath = '/index.html';
   } else {
-    filePath = res.url;
+    filePath = req.url;
   }
   const fullPath = __dirname + filePath;
   res.writeHead(200, {"Content-Type": mime[path.extname(fullPath)] || "text/plain"});
@@ -50,11 +54,12 @@ const http_server = new http.createServer(function(req, res) {
       res.end(data, 'UTF-8');
     }
   });
+
   if(req.method=='POST') {
     req.on('data', function (data) {
       console.log(data+'');
       const s_data = data + '';
-
+  
       if(s_data==='request_token'){
         let data_req = new RequestMethodClass(s_data, data_params);
         data_req.requestToken(data_params);
@@ -68,6 +73,7 @@ const http_server = new http.createServer(function(req, res) {
     // });
   } else if(req.method=='GET') {
   }
+
 }).listen(3000);
 console.log('Server running at http://localhost:3000/');
 
