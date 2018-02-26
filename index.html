@@ -30,30 +30,33 @@
             </div>
         </div>
     </body>
-    <script type="application/javascript" src="js/socket.js"></script>
     <script>
-        var s = io.connect('http://localhost:3000');//ローカル
-        //サーバから受け取るイベント
-        s.on("connect", function () {});//接続時
-        s.on("disconnect", function (client) {});//切断時
-        s.on("S_to_C_message", function (data) {
-            addMessage(data.value);
-        });
-        //クライアントからイベント送信時のイベントハンドラ
-        function sendBroadcast(text) {
-            let msg = text //取得
-            s.emit("C_to_S_broadcast", {value:msg}); // サーバへ送信
-            let request = new MakeObjectClass('send', msg);
-            request.send(msg);
-            console.log(msg);
-        }
-        function addMessage (value,color,size) {
-            let msg = value.replace( /[!@$%<>'"&|]/g, ''); //タグ記号とかいくつか削除
-            if(msg !== "user disconnected"){
-                let request = new MakeObjectClass('get', msg);
-                request.get(msg);
+        var request = new XMLHttpRequest();
+
+        //イベントハンドラ設定
+        request.onload = function (event) {
+            if (request.readyState === 4) {
+                if (request.status === 200) {
+                    console.log(request.statusText); // success
+                } else {
+                    console.log(request.statusText); // error
+                }
             }
+        };
+        request.onerror = function (event) {
+            console.log(event.type); // error
+        };
+
+        function post_uri(req_str){
+            request.open("post", 'http://localhost:3000/', true);
+            XMLHttpRequest.responseType = 'json';
+            request.send(req_str);
+            console.log(req_str);
         }
     </script>
     <script type="application/javascript" src="js/window.js"></script>
+    <script type="application/javascript" src="js/sha1.js"></script>
+    <script type="application/javascript" src="js/oauth1.js"></script>
+    <script type="application/javascript" src="js/accessTwitter.js"></script>
+</html>
 </html>

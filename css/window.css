@@ -19,6 +19,7 @@ html,body{
 }
 #timeline_panel{
         position: absolute;
+        overflow:scroll;
         background:#EEE;
 }
 #btn_clean{

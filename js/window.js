@@ -1,17 +1,24 @@
+'use strict';
+
 var count = 0;
 var touch_position_h;
 var touch_prevent_flag = 0;
 document.getElementById("timeline_panel").ontouchstart = function(event){
     if (touch_prevent_flag === 0){  
-    }else{
+    } else{
         touch_position_h = event.changedTouches[0];
-   　　}
+    }
 }
 window.onload = function(){
     window_getsize();   
 }
 window.onresize = function(){  
     window_getsize();  
+}
+window.onscroll =  function(){
+    var scrollTop = document.getElementById("timeline_panel").scrollTop;
+    console.log(scrollTop);
+
 }
 document.getElementById("timeline_panel").ontouchmove = function(event){
     if (touch_prevent_flag === 0){
@@ -28,6 +35,8 @@ document.getElementById("btn_sample").onclick = function(event){
         if(element.value!==null && element.value!=false){
             element.value=null;
         }else{
+            let str = 'request_token';
+            setTimeout(post_uri(str), 1000);
             return;
         }
         setTimeout(sendBroadcast(send_text), 1000);
@@ -59,8 +68,8 @@ mk_oj.get = function(text) {
     this.get =  object_make_get(text);
 };
 function window_getsize(){  
-    var size_h = window.innerHeight;
-    var size_w = window.innerWidth;
+    let size_h = window.innerHeight;
+    let size_w = window.innerWidth;
 
        if(size_h > size_w){
         var element = document.getElementById("window_panel"); 
@@ -167,7 +176,7 @@ function object_make_send(text){
         var tmp_num = count_onclick_btnSample - 1;
         var element = document.getElementById('message_container'+ tmp_num);
         str_tmp_h = element.clientHeight;
-        str_tmp = Number(element.clientHeight) + 20;
+        str_tmp = Number(element.clientHeight) + 40;
         messageLast_containerTop.splice(count_onclick_btnSample, 0, str_tmp);
     }else if (count_onclick_btnSample > 1){ 
         var tmp_num = count_onclick_btnSample-1;
@@ -224,7 +233,7 @@ function object_make_get(text){
         var tmp_num = count_onclick_btnSample - 1;
         var element = document.getElementById('message_container'+ tmp_num);
         str_tmp_h = element.clientHeight;
-        str_tmp = Number(element.clientHeight) + 20;
+        str_tmp = Number(element.clientHeight) + 40;
         messageLast_containerTop.splice(count_onclick_btnSample, 0, str_tmp);
     }else if (count_onclick_btnSample > 1){ 
         var tmp_num = count_onclick_btnSample-1;
